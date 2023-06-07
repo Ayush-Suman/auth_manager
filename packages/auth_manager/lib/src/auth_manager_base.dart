@@ -1,5 +1,7 @@
 import 'dart:async';
 
+typedef NoUserAuthManager<T> = AuthManager<T, void>;
+
 /// This is the base class to store the authentication state and
 /// credentials of the application.
 ///
@@ -14,13 +16,13 @@ abstract class AuthManager<T, U> {
   /// from [isAuthenticated] and [authObject]
   Future synchronize();
 
-  T get authObject;
+  T? get authObject;
 
-  U get userData;
+  U? get userData;
 
   /// [authenticate] is used to store the [authObject] and update
   /// the [isAuthenticated] state to `true`.
-  Future authenticate(T authObject, U userData);
+  Future authenticate({T authObject, U userData});
 
   /// [unauthenticate] is used to delete the [authObject] and update the
   /// [isAuthenticated] state to `false`.
@@ -30,6 +32,9 @@ abstract class AuthManager<T, U> {
   /// Generally, this would check the value of [authObject] to return the state
   /// of authentication.
   bool get isAuthenticated;
+
+  /// [authStateChanges] is used to listen to the authentication state of the app.
+  Stream<bool> get authStateChanges;
 
   /// Returns [String] type [authObject] in a format that can be used in the
   /// `Authorization` header of a request.
