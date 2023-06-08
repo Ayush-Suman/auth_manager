@@ -27,18 +27,18 @@ class TokenAuthManager extends NoUserAuthManager<String> {
   TokenAuthManager({required this.secureStorage}) {
     secureStorage.read(key: _key).then((value) {
       _token = value;
-      _completer.complete(_token != null);
+      _sink.add(_token != null);
+      _completer.complete();
     });
   }
 
   final FlutterSecureStorage secureStorage;
 
-  final Completer<bool> _completer = Completer<bool>();
+  final Completer _completer = Completer();
 
   @override
   Future synchronize() async {
-    final authState = await _completer.future;
-    _sink.add(authState);
+    await _completer.future;
     return;
   }
 
@@ -53,14 +53,16 @@ class TokenAuthManager extends NoUserAuthManager<String> {
   StreamSink get _sink => _controller.sink;
   
   @override
-  Stream<(bool, void)> get authStateChanges => _controller.stream;
+  Stream<bool> get authStateChanges => _controller.stream;
 
-  Future authenticate({required String authObject, void userData}) async {
+  @override
+  Future authenticate(String authObject) async {
     await secureStorage.write(key: _key, value: token);
     _token = token;
     _sink.add(true);
   }
 
+  @override
   Future unauthenticate() async {
     await secureStorage.delete(key: _key);
     _token = null;
@@ -70,15 +72,7 @@ class TokenAuthManager extends NoUserAuthManager<String> {
   @override
   bool get isAuthenticated => _token != null;
 
-  String Function(String? token) _tokenParser =
-      (token) => token != null ? 'Bearer $token' : '';
-
-  /// This function is used to parse the [authObject] to include any keyword
-  /// such as 'Bearer ' along with the [String] token in the `Authorization`
-  /// header of a request depending on the type of token.
-  set tokenParser(String Function(String? token) parser) {
-    _tokenParser = parser;
-  }
+  String _tokenParser(String? token) => token != null ? 'Bearer $token' : '';
 
   @override
   String get parsedAuthObject => _tokenParser(_token);
