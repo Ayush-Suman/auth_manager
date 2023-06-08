@@ -2,11 +2,6 @@
 
 This package is used by Unwired library to manage the authentication process. You can create your own auth manager by extending AuthManager class.
 
-## Manages
-
-1. Auth Objects - tokens or credentials used in Authorization header
-2. User Data - user data such as name, email, etc. of the user that is currently logged in
-
 ## Functions
 
 - [x] authenticate - saves the token and user data to the storage
@@ -14,7 +9,6 @@ This package is used by Unwired library to manage the authentication process. Yo
 - [x] get isAuthenticated - returns true if the user is authenticated
 - [x] get authObject - returns the auth object if it exists
 - [x] get authStateChanges - returns the stream of auth state changes
-- [x] get userData - returns the user data if it exists
 - [x] get parsedAuthObject - returns the String to be embedded in the Authorization header
 
 ## Usage
