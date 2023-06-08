@@ -1,14 +1,12 @@
 import 'dart:async';
 
-typedef NoUserAuthManager<T> = AuthManager<T, void>;
-
 /// This is the base class to store the authentication state and
 /// credentials of the application.
 ///
 /// Extend this class to implement your own authentication logic. You can store
 /// the [authObject] in any db of your choice, in a [FlutterSecureStorage](https://pub.dev/packages/flutter_secure_storage), or
 /// in memory if you don't want to persist it.
-abstract class AuthManager<T, U> {
+abstract class AuthManager<T> {
   const AuthManager();
 
   /// [synchronize] is used to ensure that the [authObject] is correctly synced.
@@ -18,11 +16,9 @@ abstract class AuthManager<T, U> {
 
   T? get authObject;
 
-  U? get userData;
-
   /// [authenticate] is used to store the [authObject] and update
   /// the [isAuthenticated] state to `true`.
-  Future authenticate({T authObject, U userData});
+  Future authenticate(T authObject);
 
   /// [unauthenticate] is used to delete the [authObject] and update the
   /// [isAuthenticated] state to `false`.

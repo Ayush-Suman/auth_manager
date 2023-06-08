@@ -35,6 +35,7 @@ class TokenAuthManager extends NoUserAuthManager<String> {
 
   final Completer<bool> _completer = Completer<bool>();
 
+  @override
   Future synchronize() async {
     final authState = await _completer.future;
     _sink.add(authState);
@@ -42,9 +43,6 @@ class TokenAuthManager extends NoUserAuthManager<String> {
   }
 
   String _key = 'random_key';
-  set key(String k) {
-    _key = k;
-  }
 
   String? _token;
 
@@ -55,9 +53,9 @@ class TokenAuthManager extends NoUserAuthManager<String> {
   StreamSink get _sink => _controller.sink;
   
   @override
-  Stream<bool> get authStateChanges => _controller.stream;
+  Stream<(bool, void)> get authStateChanges => _controller.stream;
 
-  Future authenticate(String token) async {
+  Future authenticate({required String authObject, void userData}) async {
     await secureStorage.write(key: _key, value: token);
     _token = token;
     _sink.add(true);

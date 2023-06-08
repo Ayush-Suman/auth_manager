@@ -1,6 +1,6 @@
 name: auth_manager
 description: Auth Manager is used by Unwired library to manage to authentication. Extend AuthManager class to create your own implementation.
-version: 1.1.0
+version: 1.2.3
 homepage: https://github.com/Ayush-Suman/auth_manager
 
 environment:
